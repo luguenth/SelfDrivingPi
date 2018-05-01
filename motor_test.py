@@ -1,13 +1,34 @@
 import readchar
 import RPi.GPIO as gpio
 import time
+ 
 
-def init():
- gpio.setmode(gpio.BCM)
- gpio.setup(17, gpio.OUT)
- gpio.setup(22, gpio.OUT)
- gpio.setup(23, gpio.OUT)
- gpio.setup(24, gpio.OUT)
+gpio.setmode(gpio.BCM)
+
+gpio.setup(17, gpio.OUT)
+gpio.setup(22, gpio.OUT)
+gpio.setup(23, gpio.OUT)
+gpio.setup(24, gpio.OUT)
+
+# pwm pins
+gpio.setup(35, gpio.OUT) # left motor
+gpio.setup(25, gpio.OUT) # right motor
+gpio.setup(0, gpio.OUT) # right motor
+pwml = gpio.PWM(0, 1)
+pwmr = gpio.PWM(0, 1)
+pwms = [pwml, pwmr]
+
+
+def stop():
+    #gpio.cleanup()
+    for pwm in pwms:
+        pwm.stop()
+
+
+def init(): 
+    pwml.start(100)
+    pwmr.start(50)
+
 
 def reverse(tf):
  init()
@@ -16,7 +37,7 @@ def reverse(tf):
  gpio.output(23, True) 
  gpio.output(24, False)
  time.sleep(tf)
- gpio.cleanup()
+ stop()
 
 def forward(tf):
  init()
@@ -25,7 +46,7 @@ def forward(tf):
  gpio.output(23, False) 
  gpio.output(24, True)
  time.sleep(tf)
- gpio.cleanup()
+ stop()
 
 def left(tf):
  init()
@@ -34,7 +55,7 @@ def left(tf):
  gpio.output(23, 1)
  gpio.output(24, 1)
  time.sleep(tf)
- gpio.cleanup()
+ stop()
 
 def right(tf):
  init()
@@ -43,7 +64,7 @@ def right(tf):
  gpio.output(23, 0) 
  gpio.output(24, 1)
  time.sleep(tf)
- gpio.cleanup()
+ stop()
 
 
 read = 0
@@ -55,10 +76,10 @@ while(1):
     if (read is 's'):
         reverse(0.1)
     if (read is 'a'):
-        print('left')
         left(0.1)
     if (read is 'd'):
         right(0.1)
     if (read is 'q'):
         break
     
+gpio.cleanup()
