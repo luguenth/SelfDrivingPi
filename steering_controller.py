@@ -6,3 +6,4 @@ car = HBridge()
 while True:
     x, y = gamepad.get()
     car.dutyCycleMatrix(x, y)
+car.stop()

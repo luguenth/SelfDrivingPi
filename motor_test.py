@@ -3,8 +3,17 @@ import RPi.GPIO as gpio
 import time
 
 
-def HBridge:
+class HBridge:
 
+    PIN_PWM1 = 0
+    PIN_PWM2 = 0
+    
+    PIN_MOTOR1P = 0
+    PIN_MOTOR1N = 0
+    PIN_MOTOR2P = 0
+    PIN_MOTOR2N = 0
+
+    
     def __init__(self):
         PIN_PWM1 = 12
         PIN_PWM2 = 18
@@ -15,9 +24,9 @@ def HBridge:
         PIN_MOTOR2N = 22
 
         gpio.setmode(gpio.BCM)
-        setupMotors();
-        setupPWM();
-        startPWM();
+        self.setupMotors();
+        self.setupPWM();
+        self.startPWM();
 
     def setupMotors(self):
         gpio.setup(self.PIN_MOTOR2P, gpio.OUT)
@@ -53,11 +62,11 @@ def HBridge:
 
         # Controller Joysticks would be to sensitive (tested with xBox360)
         # Just for debugging with Controllers
-        if(vector[0] > 0.5)
+        if(vector[0] > 0.5):
             x = vector[0]
         else:
             x = 0
-        if(vector[1] > 0.5)
+        if(vector[1] > 0.5):
             y = vector[1]
         else:
             y = 0
@@ -78,21 +87,21 @@ def HBridge:
             self.pwmr.ChangeDutyCycle(100/90*angle*length)
 
         # Forward Left
-        else if: angle < 180:
+        elif angle < 180:
             motor1_for()
             motor2_for()
             self.pwml.ChangeDutyCycle(length)
             self.pwmr.ChangeDutyCycle(100 - 100/90*(angle-90)*length)
 
         # Reverse Left
-        else if: angle < 270:
+        elif angle < 270:
             motor1_rev()
             motor2_rev()
             self.pwml.ChangeDutyCycle(length)
-            self.pwmr.ChangeDutyCycle(100/90*angle-180)*length)
+            self.pwmr.ChangeDutyCycle((100/90*angle-180)*length)
 
         # Reverse Right
-        else if: angle < 360:
+        elif angle < 360:
             motor1_rev()
             motor2_rev()
             self.pwml.ChangeDutyCycle(length)
@@ -127,5 +136,5 @@ def HBridge:
 
 
     def shutdown(self):
-        stopPWM()
-        gpio.cleanup()
+        self.stopPWM()
+        self.gpio.cleanup()
