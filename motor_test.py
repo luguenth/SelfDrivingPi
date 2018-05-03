@@ -1,7 +1,7 @@
 import readchar
 import RPi.GPIO as gpio
 import time
-
+import math
 
 class HBridge:
 
@@ -62,50 +62,63 @@ class HBridge:
 
         # Controller Joysticks would be to sensitive (tested with xBox360)
         # Just for debugging with Controllers
-        if(vector[0] > 0.5):
+        if(abs(vector[0]) > 0.5):
             x = vector[0]
         else:
             x = 0
-        if(vector[1] > 0.5):
+        if(abs(vector[1]) > 0.5):
             y = vector[1]
         else:
             y = 0
 
 
         # Calculating  the angle of the vector do determine the direction
-        angle = atan(y/x);
-
+        if x is 0:
+            angle = 0
+        else:
+            angle = math.atan(y/x)*100;
+        
         # Calculating the length of the vector
-        length = sqrt(y*y+x*x)
+        length = math.sqrt(y*y+x*x)
         # the four different directions
-
+        print("Angle: " + str(angle) + "; Length: " + str(length));
         # Forward Right
         if angle < 90:
-            motor1_for()
-            motor2_for()
-            self.pwml.ChangeDutyCycle(length)
-            self.pwmr.ChangeDutyCycle(100/90*angle*length)
+            left = length*100
+            if left > 100:
+                left=100
+            elif left < 0:
+                left = 0
+            right = angle
+            if right > 100:
+                right=100
+            elif right < 0:
+                right = 0
+            self.motor1_for()
+            self.motor2_for()
+            self.pwml.ChangeDutyCycle(left)
+            self.pwmr.ChangeDutyCycle(right)
 
         # Forward Left
         elif angle < 180:
-            motor1_for()
-            motor2_for()
+            self.motor1_for()
+            self.motor2_for()
             self.pwml.ChangeDutyCycle(length)
-            self.pwmr.ChangeDutyCycle(100 - 100/90*(angle-90)*length)
+            self.pwmr.ChangeDutyCycle(abs(100 - 100/90*(angle-90)*length))
 
         # Reverse Left
         elif angle < 270:
-            motor1_rev()
-            motor2_rev()
+            self.motor1_rev()
+            self.motor2_rev()
             self.pwml.ChangeDutyCycle(length)
-            self.pwmr.ChangeDutyCycle((100/90*angle-180)*length)
+            self.pwmr.ChangeDutyCycle(abs((100/90*angle-180)*length))
 
         # Reverse Right
         elif angle < 360:
-            motor1_rev()
-            motor2_rev()
+            self.motor1_rev()
+            self.motor2_rev()
             self.pwml.ChangeDutyCycle(length)
-            self.pwmr.ChangeDutyCycle(100 - 100/90*(angle-270)*length)
+            self.pwmr.ChangeDutyCycle(abs(100 - 100/90*(angle-270)*length))
 
     def defineDutyCycle(self, x=100, y=100):
         dc = 70
@@ -120,21 +133,21 @@ class HBridge:
         gpio.output(self.PIN_MOTOR1N, False)
 
 
-    def motor1_for():
+    def motor1_for(self):
         gpio.output(self.PIN_MOTOR1P, False)
         gpio.output(self.PIN_MOTOR1N, True)
 
 
-    def motor2_rev():
+    def motor2_rev(self):
         gpio.output(self.PIN_MOTOR2P, True)
         gpio.output(self.PIN_MOTOR2N, False)
 
 
-    def motor2_for():
+    def motor2_for(self):
         gpio.output(self.PIN_MOTOR2P, False)
         gpio.output(self.PIN_MOTOR2N, True)
 
 
     def shutdown(self):
         self.stopPWM()
-        self.gpio.cleanup()
+        gpio.cleanup()

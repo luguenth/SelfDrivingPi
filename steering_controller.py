@@ -1,9 +1,10 @@
-import gamepad
+from gamepad import GamepadCtrl
 from motor_test import HBridge
 
 car = HBridge()
+ctrl = GamepadCtrl()
 
 while True:
-    x, y = gamepad.get()
-    car.dutyCycleMatrix(x, y)
-car.stop()
+    x, y = ctrl.get()
+    car.dutyCycleMatrix([x, y])
+car.shutdown()
