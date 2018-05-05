@@ -1,32 +1,21 @@
-import readchar
 import RPi.GPIO as gpio
-import time
 import math
 
+
 class HBridge:
+    PIN_PWM1 = 12
+    PIN_PWM2 = 18
 
-    PIN_PWM1 = 0
-    PIN_PWM2 = 0
-    
-    PIN_MOTOR1P = 0
-    PIN_MOTOR1N = 0
-    PIN_MOTOR2P = 0
-    PIN_MOTOR2N = 0
+    PIN_MOTOR1P = 23
+    PIN_MOTOR1N = 24
+    PIN_MOTOR2P = 17
+    PIN_MOTOR2N = 22
 
-    
     def __init__(self):
-        PIN_PWM1 = 12
-        PIN_PWM2 = 18
-
-        PIN_MOTOR1P = 23
-        PIN_MOTOR1N = 24
-        PIN_MOTOR2P = 17
-        PIN_MOTOR2N = 22
-
         gpio.setmode(gpio.BCM)
-        self.setupMotors();
-        self.setupPWM();
-        self.startPWM();
+        self.setupMotors()
+        self.setupPWM()
+        self.startPWM()
 
     def setupMotors(self):
         gpio.setup(self.PIN_MOTOR2P, gpio.OUT)
