@@ -37,7 +37,6 @@ class HBridge:
         self.pwml.stop(0)
         self.pwmr.stop(0)
 
-
     """
     This function is using a 2 Dimensional Vector to determinate the
     direction you want to go. For Example:
@@ -60,27 +59,26 @@ class HBridge:
         else:
             y = 0
 
-
         # Calculating  the angle of the vector do determine the direction
         if x is 0:
             angle = 0
         else:
-            angle = math.atan(y/x)*100;
-        
+            angle = math.atan(y/x)*100
+
         # Calculating the length of the vector
         length = math.sqrt(y*y+x*x)
         # the four different directions
-        print("Angle: " + str(angle) + "; Length: " + str(length));
+        print("Angle: " + str(angle) + "; Length: " + str(length))
         # Forward Right
         if angle < 90:
             left = length*100
             if left > 100:
-                left=100
+                left = 100
             elif left < 0:
                 left = 0
             right = angle
             if right > 100:
-                right=100
+                right = 100
             elif right < 0:
                 right = 0
             self.motor1_for()
@@ -116,26 +114,21 @@ class HBridge:
         if y:
             self.pwmr.ChangeDutyCycle(dc)
 
-
     def motor1_rev(self):
         gpio.output(self.PIN_MOTOR1P, True)
         gpio.output(self.PIN_MOTOR1N, False)
-
 
     def motor1_for(self):
         gpio.output(self.PIN_MOTOR1P, False)
         gpio.output(self.PIN_MOTOR1N, True)
 
-
     def motor2_rev(self):
         gpio.output(self.PIN_MOTOR2P, True)
         gpio.output(self.PIN_MOTOR2N, False)
 
-
     def motor2_for(self):
         gpio.output(self.PIN_MOTOR2P, False)
         gpio.output(self.PIN_MOTOR2N, True)
-
 
     def shutdown(self):
         self.stopPWM()
