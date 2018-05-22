@@ -5,6 +5,7 @@ car = HBridge()
 ctrl = GamepadCtrl()
 
 while True:
-    x, y = ctrl.get()
-    car.dutyCycleMatrix([x, y])
+    x, lt, rt = ctrl.get()
+    velo = (-lt-1 + rt+1)/2
+    car.drive(x, velo)
 car.shutdown()

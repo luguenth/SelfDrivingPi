@@ -45,7 +45,7 @@ class HBridge:
     (-sqrt(2)/2, sqrt(2)/2) => left Forward     -> full powered
     (0,0.5)                 => forward          -> half powered
     (1, 0)                  => right            -> without motion in the right wheels
-    """
+  
     def dutyCycleMatrix(self, vector):
 
         # Controller Joysticks would be to sensitive (tested with xBox360)
@@ -106,6 +106,22 @@ class HBridge:
             self.motor2_rev()
             self.pwml.ChangeDutyCycle(length)
             self.pwmr.ChangeDutyCycle(abs(100 - 100/90*(angle-270)*length))
+"""
+
+    def drive(self, steer, velo):
+        #print(steer, velo)
+        if velo > 0:
+            self.motor1_for()
+            self.motor2_for()
+        elif velo < 0:
+            self.motor1_rev()
+            self.motor2_rev()
+        velo = abs(velo)*100
+        steer_l = min(1,1-steer)
+        steer_r = min(1,1+steer)
+        print(steer_l*velo, steer_r*velo)
+        self.pwml.ChangeDutyCycle(steer_l*velo)
+        self.pwmr.ChangeDutyCycle(steer_r*velo)
 
     def defineDutyCycle(self, x=100, y=100):
         dc = 70

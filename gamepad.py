@@ -47,4 +47,5 @@ class GamepadCtrl:
         for i in range(0, self.j.get_numbuttons()):
             out[it] = self.j.get_button(i)
             it+=1
-        return out[0], -out[1]
+        #print(out)
+        return out[0], out[2], out[5]
